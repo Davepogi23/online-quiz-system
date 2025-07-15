@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 function QuizPage() {
   const { id } = useParams();
@@ -10,6 +12,8 @@ function QuizPage() {
   const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(120);
+  const { token } = useContext(AuthContext);
+
 
 
   useEffect(() => {
@@ -48,7 +52,7 @@ function QuizPage() {
     setCurrent(prev => prev - 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
   if (submitted) return;
   setSubmitted(true);
 
@@ -57,13 +61,24 @@ function QuizPage() {
     if (answers[index] === q.answer) score++;
   });
 
-  alert(`Time's up or quiz submitted! Your score: ${score}/${quiz.questions.length}`);
-  navigate('/result', {
-  state: {
-    quiz,
-    answers
+  // Save result to backend
+  try {
+    await axios.post(
+      'http://localhost:5000/api/results',
+      {
+        quizId: quiz._id,
+        score,
+        total: quiz.questions.length,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } catch (err) {
+    console.error('Failed to save result', err);
   }
-});
+
+  navigate('/result', { state: { quiz, answers } });
 };
 
   if (!quiz) return <div className="p-6">Loading quiz...</div>;

@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 
 function CreateQuizForm() {
   const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
   const [questions, setQuestions] = useState([{ question: '', options: ['', '', '', ''], answer: '' }]);
   const { token } = useContext(AuthContext);
 
@@ -24,7 +25,7 @@ function CreateQuizForm() {
     try {
       await axios.post(
         'http://localhost:5000/api/quizzes',
-        { title, questions },
+        { title, category, questions },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert('Quiz created!');
@@ -37,6 +38,13 @@ function CreateQuizForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">
+      <input
+        type="text"
+        placeholder="Category (e.g. JavaScript, HTML)"
+        value={category}
+        onChange={e => setCategory(e.target.value)}
+        className="w-full p-2 border rounded mb-4"
+      />
       <input
         type="text"
         placeholder="Quiz Title"

@@ -30,7 +30,13 @@ router.post('/', verifyAdmin, async (req, res) => {
 // Public route: Get all quizzes
 router.get('/', async (req, res) => {
   try {
-    const quizzes = await Quiz.find().select('title');
+    const category = req.query.category;
+    let filter = {};
+    if (category) {
+      filter.category = category;
+    }
+
+    const quizzes = await Quiz.find(filter).select('title category');
     res.json(quizzes);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch quizzes' });

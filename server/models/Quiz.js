@@ -8,6 +8,7 @@ const questionSchema = new mongoose.Schema({
 
 const quizSchema = new mongoose.Schema({
   title: String,
+  category: String,
   questions: [questionSchema],
 });
 
