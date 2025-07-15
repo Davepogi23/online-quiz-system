@@ -6,12 +6,15 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import QuizPage from './pages/QuizPage';
 import ResultPage from './pages/ResultPage';
+import Leaderboard from './pages/Leaderboard';
+
 
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route
